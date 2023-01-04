@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>水深地図</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<script src="{% static 'js/moment.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+<div id="map2" style="width: 90%;height: 45%;margin: auto 5%"></div>
+<canvas id="stage"></canvas>
+<script>
+cord=[
+	{% for depthdata in data  %}
+ 	 {
+ 	  lat:{{ depthdata.緯度}},
+ 	  lon:{{ depthdata.経度}},
+ 	  depth:'{{depthdata.深さ}}', 	  
+ 	  time:'{{depthdata.計測時刻}}',
+ 	 },
+{% endfor %}
+]
+var map=L.map('map2').setView([cord[0].lat,cord[0].lon], 14);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 20
+		}).addTo(map);
+L.control.scale();
+var timedata="['";
+var depthdata="[";
+for (i = 0; i < cord.length; i++) {
+	var popupContent = '<p>'+cord[i].depth+'</p>';
+	var circle = L.circle([cord[i].lat,cord[i].lon],3,{
+	color:defcollor('0000FF',25.6,cord[i].depth,25.6),
+	tap:false,
+	opacity:0.2
+	}).bindPopup(popupContent)
+	.addTo(map);
+	times=new Date(cord[i].time*1000);
+	if (i==(cord.length-1)){
+	timedata=timedata+times.toLocaleString()+"']";
+	depthdata=depthdata+cord[i].depth+"]";
+	}
+	else{
+	timedata=timedata+times.toLocaleString()+"','";
+	depthdata=depthdata+cord[i].depth+",";
+	}
+}
+
+console.log("%s/n%s",timedata,depthdata);
+var mydata = {
+  labels: timedata,
+  datasets: [
+    {
+      label: '水深',
+      hoverBackgroundColor: "rgba(255,99,132,0.3)",
+      data: depthdata,
+    }
+  ]
+};
+
+//「オプション設定」
+var options = {
+  title: {    
+    display: true,
+    text: 'サンプルチャート'
+  }
+};
+options={
+            //凡例は非表示
+            legend: {
+                display: false
+            },
+            scales: {
+                //X軸
+                xAxes: [{
+                    //軸ラベル表示
+                    scaleLabel: {
+                        display: true,
+                        labelString: '時間'
+                    },
+                    //ここで軸を時間を設定する
+                    type: 'time',
+                    time: {
+                        parser: 'HH:mm',
+                        unit: 'hour',
+                        stepSize: 1,
+                        displayFormats: {
+                            'hour': 'HH:mm'
+                        }
+                    },
+                    //X軸の範囲を指定
+                    ticks: {
+                        min: '09:00',
+                        max: '20:00'
+                    }
+                }],
+                //Y軸
+                yAxes: [{
+                    //軸ラベル表示
+                    scaleLabel: {
+                        display: true,
+                        labelString: '体温'
+                    },
+                    //Y軸の範囲を指定
+                    ticks: {
+                        min: 0,
+                        max: 25.6
+                    }
+                }]
+            }
+        }
+
+var canvas = document.getElementById('stage');
+var chart = new Chart(canvas, {
+
+  type: 'line',  //グラフの種類
+  data: mydata,  //表示するデータ
+  options: options  //オプション設定
+
+});
+</script>
+    <p>データは午前０時に更新されます</p>
+{% endblock %}

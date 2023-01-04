@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>アップロード成功</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5"></h1>
+    <p>アップロードが完了しました。</p>
+        <br>
+    <p>{{getpoint}}箇所のデータをアップロードしました</p>
+        <br> 
+    <p>毎日０時に点数、データが反映されます</p>
+        <br>
+    <a href="/upload">続けてアップロードする</a>
+        <br>
+    <a href="/web">水深地図</a>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>購入画面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map2" style="width: 960px; height: 600px"></div>
+    <p id="limit">表示期限</p>    
+    <p>所持ポイント：{{point}}→{{usedpoint}}</p>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+    <p>表示期間を３０日延長する（最大９０日まで）</p>
+    <p>{{usepoint}}ポイント使用してこの領域の表示期間を延長しますか？</p>
+      <button id="extend"type="submit"name="extend_button">延長</button>
+    <p>追加表示を購入すると、各地点の時間ごとの水深を閲覧できます</p>
+    <p>{{usepoint}}ポイント使用してこの領域の追加表示を購入しますか？</p>
+      <button type="submit"name="get_button">購入</button>
+      <button type="submit"name="cancel_button">戻る</button>
+     </form>
+
+</form>
+<script>
+cord=[
+	{% for correctdata in data  %}
+ 	 {
+ 	  lat:{{ correctdata.緯度}},
+ 	  lon:{{ correctdata.経度}},
+ 	 },
+{% endfor %}
+]
+lat={{lat}};
+lon={{lon}};
+var map=L.map('map2').setView([lat+0.05,lon+0.05],14);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 18
+		}).addTo(map);
+L.control.scale();
+var Polygon = L.polygon([[lat,lon],[lat+0.1,lon],[lat+0.1,lon+0.1],[lat,lon+0.1],[lat, lon]],{
+	"color":'#4DB56A',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#4DB56A',
+	fillOpacity:0.2
+	}).addTo(map);
+for (i = 0; i < cord.length; i++) {
+	var circle = L.circle([cord[i].lat,cord[i].lon],1,{
+	color:'#0000FF',
+	fill:true,
+	fillOpacity:1,
+	tap:false,
+	opacity:0
+	}).addTo(map);
+}
+limit={{limit}};
+time={{time}};
+function disableext(){
+const text=document.getElementById("limit");
+if(limit>(time+7776000)){
+document.getElementById("extend").disabled = true;
+const lim= new Date(limit*1000);
+disp="表示期限:"+lim.toLocaleDateString()+"(上限)";
+text.innerHTML=disp;
+}
+else{
+newlimit=limit+2592000;
+const lim= new Date(limit*1000);
+const nlim= new Date(newlimit*1000);
+disp="表示期限:"+lim.toLocaleDateString()+"→"+nlim.toLocaleDateString();
+text.innerHTML=disp;
+}}
+disableext();
+</script>
+{% endblock %}

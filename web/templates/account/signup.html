@@ -1,0 +1,29 @@
+<form action="" method="post">
+{% csrf_token %}
+<div>
+<h1>アカウント登録</h1>
+<dl>
+    <div>
+        <dt>アカウント名</dt>
+        <dt>{{ form.username }}{{ forms.username.errors }}</dt>
+    </div>
+    <div>
+        <dt>メールアドレス</dt>
+        <dt>{{ form.email }}{{ form.email.erors }}</dt>
+    </div>
+    <div>
+        <dt>パスワード</dt>
+        <dt>{{ form.password }}{{ form.password.errors }}</dt>
+        <p>英数字を含む6文字以上の入力をお願いします。</p>
+    </div>
+    <div>
+        <dt> パスワード(確認)</dt>
+        <dt>{{ form.confirm_password }}{{ form.confirm_password.errors }}</dt>
+        <p>上記パスワードと同様のパスワードの入力をお願いします。</p>
+    </div>
+    <div>
+        <button type="submit"><i class="fa fa-plus" style="color:#fff;"></i> アカウントを登録する</button>
+    </div>
+</dl>
+</div>
+</form>

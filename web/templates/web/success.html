@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>購入成功</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5"></h1>
+    <p>購入が完了しました。</p>
+        <br>
+    <p>残りポイント{{usedpoint}}</p>
+        <br>
+    <a href="/web/purchase">続けて購入する</a>
+        <br>
+    <a href="/web">水深地図</a>
+</div>
+{% endblock %}

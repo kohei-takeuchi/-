@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+    {% block title %}
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'account:home' %}">&nbsp;ホーム</a>
+      {% if user.is_authenticated %}
+      <a class="navbar-brand" >ログインしています　{{ user.username }}</a>     
+      <a class="navbar-brand" href="{% url 'account:logout' %}">ログアウト</a>
+      <a class="navbar-brand" href="{% url 'account:user' %}">登録情報の確認・変更</a>
+      {% else %}
+      <a class="navbar-brand" href="{% url 'account:login' %}">ログイン</a>
+      <a class="navbar-brand" href="{% url 'account:signup' %}">会員登録</a>
+      {% endif %}
+    </nav>
+    {% block content %}{% endblock %}
+  </body>
+</html>
