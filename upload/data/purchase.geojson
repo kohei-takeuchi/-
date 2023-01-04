@@ -1,0 +1,5 @@
+{
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "lat": 35.6, "lon": 139.7,"rank": 0,"ID": "admin","time": 1667352976.775491 }, "geometry": { "type": "Polygon", "coordinates": [[[139.7, 35.6],[139.7,35.7],[139.79999999999998, 35.7],[139.79999999999998, 35.6],[139.7, 35.6]]] } }]
+}

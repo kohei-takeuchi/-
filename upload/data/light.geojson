@@ -1,0 +1,5 @@
+{
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "緯度": 35.62312, "経度": 139.78162,"深さ": -1 }, "geometry": { "type": "Point", "coordinates": [ 139.78162, 35.62312 ] } }]
+}
