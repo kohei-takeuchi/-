@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5"></h1>
+    <p>{{ user.email }}さん、こんにちは。</p>
+        <br>
+    <a href="/web">水深マップ</a>
+        <br>
+    <a href="/upload">データアップロード</a>
+        <br>
+    <a href="{% url 'account:logout' %}">ログアウト</a>
+</div>
+{% endblock %}

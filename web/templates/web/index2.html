@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="ja">
+    <meta charset="UTF-8">
+    <title>Leafletテスト</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js" type="text/javascript" ></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" type="text/css">		
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+<div id="map" style="width: 960px; height: 600px"></div>
+<script>
+var map = L.map('map').setView([35.622833251953125,139.78152465820312], 14);
+//OSMレイヤー追加
+L.tileLayer(
+	'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+	,{
+	    attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	    maxZoom: 18
+	}
+).addTo(map);
+cord=[
+	{% for odaibaD in data  %}
+ 	 {
+ 	  lat:{{ odaibaD.緯度}},
+ 	  lon:{{ odaibaD.経度}},
+ 	  depth:'{{odaibaD.深さ}}',
+ 	  color:'' 	  
+ 	 },
+{% endfor %}
+]
+
+for (i = 0; i < cord.length; i++) {
+	if(cord[i].depth<=8.7){
+	cord[i].color='#FFFFFF'
+	}else if(cord[i].depth<=8.8){
+	cord[i].color='#EFEFFF'
+	}else if(cord[i].depth<=8.9){
+	cord[i].color='#DFDFFF'
+	}else if(cord[i].depth<=9.0){
+	cord[i].color='#CFCFFF'
+	}else if(cord[i].depth<=9.1){
+	cord[i].color='#BFBFFF'
+	}else if(cord[i].depth<=9.2){
+	cord[i].color='#AFAFFF'
+	}else if(cord[i].depth<=9.3){
+	cord[i].color='#9F9FFF'
+	}else if(cord[i].depth<=9.4){
+	cord[i].color='#8F8FFF'
+	}else if(cord[i].depth<=9.5){
+	cord[i].color='#7F7FFF'
+	}else if(cord[i].depth<=9.6){
+	cord[i].color='#6F6FFF'
+	}else if(cord[i].depth<=9.7){
+	cord[i].color='#5F5FFF'
+	}else if(cord[i].depth<=9.8){
+	cord[i].color='#4F4FFF'
+	}else if(cord[i].depth<=9.9){
+	cord[i].color='#3F3FFF'
+	}else if(cord[i].depth<=10.0){
+	cord[i].color='#2F2FFF'
+	}else if(cord[i].depth<=10.1){
+	cord[i].color='#1F1FFF'
+	}else{
+	cord[i].color='#0F0FFF'
+	}
+
+	var circle = L.circle([cord[i].lat　, cord[i].lon],2,{
+	color:cord[i].color,
+	opacity:0.1
+	})
+	    .bindPopup(cord[i].depth)
+	    .addTo(map);
+}
+</script>
+</body>
+</html>
+</body>
+</html>

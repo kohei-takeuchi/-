@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>エラーが発生しました</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-5"></h1>
+    <p>指定されたページにアクセスできません</p>
+        <br>
+    <a href="/web/purchase">アップロード</a>
+
+        <br>
+    <a href="/web">水深地図</a>
+   <br>
+    <a href="/web/purchase">購入</a>
+</div>
+{% endblock %}

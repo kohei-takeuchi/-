@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>表示範囲選択</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map1" style="width: 960px; height: 600px"></div>
+<script>
+purch=[
+	{% for purchasedata in purchase  %}
+ 	 {
+ 	  lat:{{ purchasedata.lat}},
+ 	  lon:{{ purchasedata.lon}},
+ 	  rank:{{ purchasedata.rank}},
+ 	  time:{{purchasedata.time}},
+ 	 },
+{% endfor %}
+]
+
+is_data=[
+	{% for purchasedata in is_data  %}
+ 	 {
+ 	  lat:{{ purchasedata.lat}},
+ 	  lon:{{ purchasedata.lon}},
+ 
+ 	 },
+{% endfor %}
+]
+var map=L.map('map1').setView([35.6,139.8], 10);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 18
+		}).addTo(map);
+L.control.scale();
+if (is_data!=0){
+i=0;
+for(j=0;j<is_data.length;j++){
+if(purch!=0){
+const lim= new Date(purch[i].time*1000);
+ if(i!=purch.length&&is_data[j].lat==purch[i].lat && is_data[j].lon==purch[i].lon){
+    if(purch[i].rank==2){
+	var popupContent = '<a href="purchase/'+purch[i].lat.toFixed(1)+'/'+purch[i].lon.toFixed(1)+'">すべてのデータが閲覧できます</a><p>\n表示期限:'+lim.toLocaleDateString()+'</a>';
+	var Polygon = L.polygon([[purch[i].lat,purch[i].lon],[purch[i].lat+0.1,purch[i].lon],[purch[i].lat+0.1,purch[i].lon+0.1],[purch[i].lat,purch[i].lon+0.1],[purch[i].lat, purch[i].lon]],{
+	"color":'#FFD700',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#FFD700',
+	fillOpacity:0.2
+	}).bindPopup(popupContent).addTo(map);
+    		}
+   else{
+    	var popupContent = '<a href="purchase/'+purch[i].lat.toFixed(1)+'/'+purch[i].lon.toFixed(1)+'">詳細なデータを表示する</a><p>\n表示期限:'+lim.toLocaleDateString()+'</a>';
+	var Polygon = L.polygon([[purch[i].lat,purch[i].lon],[purch[i].lat+0.1,purch[i].lon],[purch[i].lat+0.1,purch[i].lon+0.1],[purch[i].lat,purch[i].lon+0.1],[purch[i].lat, purch[i].lon]],{
+	"color":'#C0C0C0',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#C0C0C0',
+	fillOpacity:0.2
+	}).bindPopup(popupContent).addTo(map);  		
+    		}
+    i++;
+ }
+ else{
+	var popupContent = '<a href="purchase/'+is_data[j].lat.toFixed(1)+'/'+is_data[j].lon.toFixed(1)+'">購入ページへ</a>';
+	var Polygon = L.polygon([[is_data[j].lat,is_data[j].lon],[is_data[j].lat+0.1,is_data[j].lon],[is_data[j].lat+0.1,is_data[j].lon+0.1],[is_data[j].lat,is_data[j].lon+0.1],[is_data[j].lat,is_data[j].lon]],{
+	"color":'#4DB56A',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#4DB56A',
+	fillOpacity:0.2
+	}).bindPopup(popupContent).addTo(map);
+ }
+}
+else{
+	var popupContent = '<a href="purchase/'+is_data[j].lat.toFixed(1)+'/'+is_data[j].lon.toFixed(1)+'">購入ページへ</a>';
+	var Polygon = L.polygon([[is_data[j].lat,is_data[j].lon],[is_data[j].lat+0.1,is_data[j].lon],[is_data[j].lat+0.1,is_data[j].lon+0.1],[is_data[j].lat,is_data[j].lon+0.1],[is_data[j].lat,is_data[j].lon]],{
+	"color":'#4DB56A',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#4DB56A',
+	fillOpacity:0.2
+	}).bindPopup(popupContent).addTo(map);
+}
+}
+}
+</script>
+{% endblock %}

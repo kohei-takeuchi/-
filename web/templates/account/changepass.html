@@ -1,0 +1,23 @@
+{% extends "account/base.html" %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>パスワード変更</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'password_change_post' %}" method="POST">
+        <p>元のパスワード:{{ form.old_password }}</p>
+        <p>新しいパスワード:{{ form.new_password1 }}</p>
+        <ul>
+            <li>ご登録情報に似たパスワードにはできません。</li>
+            <li>8文字以上32文字以内で設定してください。</li>
+            <li>よく使われるパスワードにはできません。</li>
+            <li>数字だけのパスワードにはできません。</li>
+        </ul>
+        <p>新しいパスワード（確認用）:{{ form.new_password2 }}</p>
+        <button>パスワードを変更する</button>{% csrf_token %}
+    </form>
+</body>
+{% endblock %}
+

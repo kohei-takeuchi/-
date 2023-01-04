@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>水深地図</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map2"></div>
+<script>
+var map=L.map('map2').setView([35.6,139.8], 10);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 18
+		}).addTo(map);
+L.control.scale();
+var result =window.confirm('表示可能な領域がありません。\n購入ページへ移動しますか？');
+if (result=true){
+    location.href="/web/purchase";  
+    }
+</script>
+{% endblock %}

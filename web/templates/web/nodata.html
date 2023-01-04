@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>購入画面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map2"></div>
+<script>
+cord=[
+	{% for depthdata in data  %}
+ 	 {
+ 	  lat:{{ depthdata.緯度}},
+ 	  lon:{{ depthdata.経度}},
+ 	 },
+{% endfor %}
+]
+lat={{lat}};
+lon={{lon}};
+var map=L.map('map2').setView([lat+0.05,lon+0.05],10);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 18
+		}).addTo(map);
+L.control.scale();
+var Polygon = L.polygon([[lat,lon],[lat+0.1,lon],[lat+0.1,lon+0.1],[lat,lon+0.1],[lat, lon]],{
+	"color":'#4DB56A',
+	"weight": 3,
+	opacity:0.5,
+	fillColor:'#4DB56A',
+	fillOpacity:0.2
+	}).addTo(map);
+var result =window.confirm('表示可能なデータがありません。\n購入ページへ移動しますか？');
+if (result=true){
+    location.href="/web/purchase";     
+}
+</script>
+    <p>表示可能なデータがありません</p>
+    <br>
+    <a href="/web/purchase">戻る</a>
+{% endblock %}

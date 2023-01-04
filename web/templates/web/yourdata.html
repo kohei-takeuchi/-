@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>水深地図</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map1"></div>
+<script>
+mycord=[
+	{% for depthdata in mydata  %}
+ 	 {
+ 	  lat:{{ depthdata.緯度}},
+ 	  lon:{{ depthdata.経度}},
+ 	  depth:'{{depthdata.深さ}}',
+ 	 },
+{% endfor %}
+]
+var map=L.map('map1').setView([mycord[0].lat,mycord[0].lon], 14);
+L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 20
+		}).addTo(map);
+L.control.scale();
+for (i = 0; i < mycord.length; i++) {
+	var circle = L.circle([mycord[i].lat,mycord[i].lon],1,{
+	color:defcollor('0000FF',25.6,mycord[i].depth,25.6),
+	fill:true,
+	fillOpacity:1,
+	tap:false,
+	opacity:0
+	}).bindPopup(mycord[i].depth)
+	.addTo(map);
+}
+</script>
+{% endblock %}

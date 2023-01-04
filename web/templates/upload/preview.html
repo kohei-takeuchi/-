@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <meta charset="UTF-8">
+    <title>アップロード確認</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nouislider.min.css' %}">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" type="text/css">
+{% endblock %}
+{% block content %}
+<script src="{% static 'js/leaflet.js' %}" crossorigin=""></script>
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}" type="text/css">
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/display-depth.js' %}"></script>
+<div id="map2"></div>
+<script>
+csv={{ previewdata|safe }};
+function csv2map(csv) {
+	var place = Array();
+	line = csv.split("\n");
+	for (var i=0; i<line.length; i++) {
+		data = line[i].split(',');
+		if (data.length > 2 && data[0]!=0) {
+			place.push([data[0], data[1], data[2]]);
+
+		}
+	}
+place2map(place);
+}
+function place2map(place) {
+var map=L.map('map2').setView([place[0][0],place[0][1]], 10);
+	L.tileLayer(
+		'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+		,{
+	 	   attribution: 'Map data c <a href="http://openstreetmap.org">OpenStreetMap</a>',
+	 	   maxZoom: 18
+		}).addTo(map);
+L.control.scale();
+	for (i = 0; i<place.length; i++) {
+	var circle = L.circle([place[i][0],place[i][1]],2,{
+	color:defcollor('0000FF',25.6,place[i][2],25.6),
+	fill:true,
+	fillOpacity:1,
+	tap:false,
+	opacity:0
+	}).bindPopup(place[i][2])
+	.addTo(map);
+	}
+}
+csv2map(csv);
+</script>
+<br>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit"name="upload_button">アップロード</button>
+      <button type="submit"name="cancel_button">戻る</button>
+     </form>
+{% endblock %}
